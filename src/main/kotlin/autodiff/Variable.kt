@@ -8,8 +8,8 @@ class Variable(val name: String): Expression() {
     var xDot = 0.0
     var xBar = 0.0
 
-    override fun getVariables(): MutableSet<Variable> {
-        return mutableSetOf(this)
+    override fun getVariables(): Set<Variable> {
+        return setOf(this)
     }
 
     open fun updateX(): Double {

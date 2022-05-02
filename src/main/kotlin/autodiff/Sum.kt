@@ -1,17 +1,10 @@
 package autodiff
 
-class Sum(vararg expressions: Expression) : Expression() {
-    var containedVariables: MutableSet<Variable> = mutableSetOf()
+class Sum(val expressionOne: Expression, val expressionTwo: Expression) : Expression() {
+    var containedVariables: Set<Variable> = expressionOne.getVariables() + expressionTwo.getVariables()
     val expressions = ArrayList<Expression>()
 
-    init {
-        for (expression in expressions) {
-            this.expressions.add(expression)
-            this.containedVariables += expression.getVariables()
-        }
-    }
-
-    override fun getVariables(): MutableSet<Variable> {
+    override fun getVariables(): Set<Variable> {
         return containedVariables
     }
 
@@ -50,10 +43,6 @@ class Sum(vararg expressions: Expression) : Expression() {
 //    }
 
     override fun toString(): String {
-        var str : String = ""
-        for (expression in expressions) {
-            str += expression.toString() + " + "
-        }
-        return "(" + str.substring(0, str.length - 3) + ")"
+        return "(${expressionOne} + ${expressionTwo})"
     }
 }

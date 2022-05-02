@@ -1,14 +1,9 @@
 package autodiff
 
-class Quotient(val dividend: Expression, val divisor: Expression) : Expression() {
-    var containedVariables: MutableSet<Variable> = mutableSetOf()
+class Quotient(val numerator: Expression, val denominator: Expression) : Expression() {
+    var containedVariables: Set<Variable> = numerator.getVariables() + denominator.getVariables()
 
-    init {
-        containedVariables += dividend.getVariables()
-        containedVariables += divisor.getVariables()
-    }
-
-    override fun getVariables(): MutableSet<Variable> {
+    override fun getVariables(): Set<Variable> {
         return containedVariables
     }
 
@@ -41,6 +36,6 @@ class Quotient(val dividend: Expression, val divisor: Expression) : Expression()
 //    }
 //
     override fun toString(): String {
-        return "(${dividend} / ${divisor})"
+        return "(${numerator} / ${denominator})"
     }
 }
