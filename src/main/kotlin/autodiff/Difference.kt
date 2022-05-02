@@ -1,7 +1,13 @@
-//package autodiff
-//
-//class Difference(val minuend: Variable, val subtrahend: Variable) : Expression {
-//
+package autodiff
+
+class Difference(val minuend: Expression, val subtrahend: Expression) : Expression() {
+    var containedVariables: Set<Variable> = minuend.getVariables() + subtrahend.getVariables()
+    val expressions = ArrayList<Expression>()
+
+    override fun getVariables(): Set<Variable> {
+        return containedVariables
+    }
+
 //    init {
 //        children.add(minuend)
 //        children.add(subtrahend)
@@ -29,8 +35,8 @@
 //            -1.0
 //        }
 //    }
-//
-//    override fun toString(): String {
-//        return "$name = ${minuend.name} - ${subtrahend.name} -- ${super.toString()}"
-//    }
-//}
+
+    override fun toString(): String {
+        return "(${minuend} - ${subtrahend})"
+    }
+}
