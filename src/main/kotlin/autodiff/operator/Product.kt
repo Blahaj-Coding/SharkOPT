@@ -15,8 +15,8 @@ class Product(val expressionOne: Expression, val expressionTwo: Expression) : Ex
     }
 
     override fun solveJacobian(variables: HashMap<Variable, Double>, jacobian: HashMap<Variable, Double>, path: Double) {
-        expressionOne.solveJacobian(variables, jacobian, path)
-        expressionTwo.solveJacobian(variables, jacobian, path)
+        expressionOne.solveJacobian(variables, jacobian, path * expressionTwo.evaluate(variables))
+        expressionTwo.solveJacobian(variables, jacobian, path * expressionOne.evaluate(variables))
     }
 
     override fun toString(): String {
