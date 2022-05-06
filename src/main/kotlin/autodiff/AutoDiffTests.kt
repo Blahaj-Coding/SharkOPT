@@ -9,11 +9,12 @@ fun main(args: Array<String>) {
 //    val f0 = x0/x1 - x2/x0
 //    val f1 = ((x0 + x1) * (x1 + x2)) * (x1*x1)
 //    val f1 = (a * b - a * c + b * b - b * c) / (b * b)
-    val f1 = (a * b * b * b + a * c * b * Cos(b) + Power(b, Constant(4.0)) + b * b * b * c)
+//    val f1 = (a * b * b * b + a * c * b * Log(Constant(5.0), b) + Power(b, Constant(4.0)) + b * b * b * c)
+    val f1 = Log(a, b)
 //    val f2 = f0 + f1
     println(f1)
     var mapping = HashMap<Variable, Double>()
-    mapping.put(a, 1.0)
+    mapping.put(a, 3.0)
     mapping.put(b, 2.0)
     mapping.put(c, 1.0)
 //    println(f0.evaluate(mapping))
