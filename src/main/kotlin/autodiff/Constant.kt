@@ -10,4 +10,8 @@ class Constant(val num : Double) : Expression() {
     }
 
     override fun solveJacobian(variables: HashMap<Variable, Double>, jacobian: HashMap<Variable, Double>, path: Double) {}
+
+    override fun toString(): String {
+        return "$num"
+    }
 }

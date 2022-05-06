@@ -4,7 +4,7 @@ import autodiff.Expression
 import autodiff.Variable
 
 class Product(val expressionOne: Expression, val expressionTwo: Expression) : Expression() {
-    var containedVariables: Set<Variable> = expressionOne.getVariables() + expressionTwo.getVariables()
+    private var containedVariables: Set<Variable> = expressionOne.getVariables() + expressionTwo.getVariables()
 
     override fun getVariables(): Set<Variable> {
         return containedVariables

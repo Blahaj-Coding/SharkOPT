@@ -7,7 +7,7 @@ import kotlin.math.sin
 import kotlin.math.cos
 
 class Cos(private val expression: Expression) : Expression() {
-    var containedVariables = expression.getVariables()
+    private var containedVariables = expression.getVariables()
 
     override fun getVariables(): Set<Variable> {
         return containedVariables

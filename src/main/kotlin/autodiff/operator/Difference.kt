@@ -3,8 +3,8 @@ package autodiff.operator
 import autodiff.Expression
 import autodiff.Variable
 
-class Difference(val minuend: Expression, val subtrahend: Expression) : Expression() {
-    var containedVariables: Set<Variable> = minuend.getVariables() + subtrahend.getVariables()
+class Difference(private val minuend: Expression, private val subtrahend: Expression) : Expression() {
+    private var containedVariables: Set<Variable> = minuend.getVariables() + subtrahend.getVariables()
 
     override fun getVariables(): Set<Variable> {
         return containedVariables
