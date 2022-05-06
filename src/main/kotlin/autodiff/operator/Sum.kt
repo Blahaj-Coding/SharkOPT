@@ -3,8 +3,8 @@ package autodiff.operator
 import autodiff.Expression
 import autodiff.Variable
 
-class Sum(val expressionOne: Expression, val expressionTwo: Expression) : Expression() {
-    var containedVariables: Set<Variable> = expressionOne.getVariables() + expressionTwo.getVariables()
+class Sum(private val expressionOne: Expression, private val expressionTwo: Expression) : Expression() {
+    private var containedVariables: Set<Variable> = expressionOne.getVariables() + expressionTwo.getVariables()
 
     override fun getVariables(): Set<Variable> {
         return containedVariables

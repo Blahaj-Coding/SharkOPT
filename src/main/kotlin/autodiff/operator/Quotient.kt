@@ -4,8 +4,8 @@ import autodiff.Expression
 import autodiff.Variable
 import kotlin.math.pow
 
-class Quotient(val numerator: Expression, val denominator: Expression) : Expression() {
-    var containedVariables: Set<Variable> = numerator.getVariables() + denominator.getVariables()
+class Quotient(private val numerator: Expression, private val denominator: Expression) : Expression() {
+    private var containedVariables: Set<Variable> = numerator.getVariables() + denominator.getVariables()
     override fun getVariables(): Set<Variable> {
         return containedVariables
     }
