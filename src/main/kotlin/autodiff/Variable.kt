@@ -12,25 +12,14 @@ class Variable(val name: String): Expression() {
         return setOf(this)
     }
 
-    open fun updateX(): Double {
-        return x
+    override fun evaluate(variables: HashMap<Variable, Double>): Double {
+        return variables.get(this)!!
     }
 
-    open fun updateXDot(): Double {
-        return xDot
+    override fun solveJacobian(variables: HashMap<Variable, Double>, jacobian: HashMap<Variable, Double>, path: Double) {
+        jacobian.put(this, jacobian.get(this)!! + path)
     }
 
-    open fun partial(variable: Variable): Double {
-        return 1.0
-    }
-
-//    fun updateXBar(): Double {
-//        for (parent in parents) {
-//            xBar += parent.xBar * parent.partial(this)
-//        }
-//        return xBar
-//    }
-//
     override fun toString(): String {
         return name
     }
