@@ -3,23 +3,25 @@ package autodiff.operator
 import autodiff.Expression
 import autodiff.Variable
 
-class Difference(val minuend: Expression, val subtrahend: Expression) : Expression() {
-    var containedVariables: Set<Variable> = minuend.getVariables() + subtrahend.getVariables()
+import kotlin.math.sin
+import kotlin.math.cos
+
+class Sin(private val expression: Expression) : Expression() {
+    var containedVariables = expression.getVariables()
 
     override fun getVariables(): Set<Variable> {
         return containedVariables
     }
 
     override fun evaluate(variables: HashMap<Variable, Double>): Double {
-        return minuend.evaluate(variables) - subtrahend.evaluate(variables)
+        return sin(expression.evaluate(variables))
     }
 
     override fun solveJacobian(variables: HashMap<Variable, Double>, jacobian: HashMap<Variable, Double>, path: Double) {
-        minuend.solveJacobian(variables, jacobian, path)
-        subtrahend.solveJacobian(variables, jacobian, path * -1)
+        expression.solveJacobian(variables, jacobian, path * cos(expression.evaluate(variables)))
     }
 
     override fun toString(): String {
-        return "(${minuend} - ${subtrahend})"
+        return "sin($expression)"
     }
 }
