@@ -2,6 +2,7 @@ package autodiff.operator
 
 import autodiff.Expression
 import autodiff.Variable
+import autodiff.VariableMap
 import kotlin.math.ln
 import kotlin.math.log
 
@@ -12,11 +13,11 @@ class Log(private val base: Expression, private val expression: Expression) : Ex
         return containedVariables
     }
 
-    override fun evaluate(variables: HashMap<Variable, Double>): Double {
+    override fun evaluate(variables: VariableMap): Double {
         return log(expression.evaluate(variables), base.evaluate(variables))
     }
 
-    override fun solveJacobian(variables: HashMap<Variable, Double>, jacobian: HashMap<Variable, Double>, path: Double) {
+    override fun solveJacobian(variables: VariableMap, jacobian: VariableMap, path: Double) {
         val baseValue = base.evaluate(variables)
         val expValue = expression.evaluate(variables)
         val baseGradient = -log(expValue, baseValue) / (baseValue * ln(baseValue))

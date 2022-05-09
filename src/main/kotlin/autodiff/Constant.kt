@@ -5,11 +5,11 @@ class Constant(val num : Double) : Expression() {
         return mutableSetOf();
     }
 
-    override fun evaluate(variables: HashMap<Variable, Double>): Double {
+    override fun evaluate(variables: VariableMap): Double {
         return num
     }
 
-    override fun solveJacobian(variables: HashMap<Variable, Double>, jacobian: HashMap<Variable, Double>, path: Double) {}
+    override fun solveJacobian(variables: VariableMap, jacobian: VariableMap, path: Double) {}
 
     override fun toString(): String {
         return "$num"

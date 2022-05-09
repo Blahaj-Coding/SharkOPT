@@ -13,7 +13,7 @@ fun main(args: Array<String>) {
     val f1 = Log(a, b)
 //    val f2 = f0 + f1
     println(f1)
-    var mapping = HashMap<Variable, Double>()
+    var mapping = VariableMap()
     mapping.put(a, 3.0)
     mapping.put(b, 2.0)
     mapping.put(c, 1.0)

@@ -24,12 +24,12 @@ abstract class Expression {
         return Quotient(this, expression)
     }
 
-    abstract fun evaluate(variables: HashMap<Variable, Double>): Double
+    abstract fun evaluate(variables: VariableMap): Double
 
-    abstract fun solveJacobian(variables: HashMap<Variable, Double>, jacobian: HashMap<Variable, Double>, path: Double)
+    abstract fun solveJacobian(variables: VariableMap, jacobian: VariableMap, path: Double)
 
-    fun solveJacobian(variables: HashMap<Variable, Double>): HashMap<Variable, Double> {
-        var jacobian = HashMap<Variable, Double>()
+    fun solveJacobian(variables: VariableMap): VariableMap {
+        var jacobian = VariableMap()
         getVariables().map {jacobian.put(it, 0.0)}
         solveJacobian(variables, jacobian, 1.0)
         return jacobian
