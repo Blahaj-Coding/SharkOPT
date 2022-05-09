@@ -2,6 +2,7 @@ package autodiff.operator
 
 import autodiff.Expression
 import autodiff.Variable
+import autodiff.VariableMap
 
 class Difference(private val minuend: Expression, private val subtrahend: Expression) : Expression() {
     private var containedVariables: Set<Variable> = minuend.getVariables() + subtrahend.getVariables()
@@ -10,11 +11,11 @@ class Difference(private val minuend: Expression, private val subtrahend: Expres
         return containedVariables
     }
 
-    override fun evaluate(variables: HashMap<Variable, Double>): Double {
+    override fun evaluate(variables: VariableMap): Double {
         return minuend.evaluate(variables) - subtrahend.evaluate(variables)
     }
 
-    override fun solveJacobian(variables: HashMap<Variable, Double>, jacobian: HashMap<Variable, Double>, path: Double) {
+    override fun solveJacobian(variables: VariableMap, jacobian: VariableMap, path: Double) {
         minuend.solveJacobian(variables, jacobian, path)
         subtrahend.solveJacobian(variables, jacobian, path * -1)
     }

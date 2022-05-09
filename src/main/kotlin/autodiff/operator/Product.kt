@@ -2,6 +2,7 @@ package autodiff.operator
 
 import autodiff.Expression
 import autodiff.Variable
+import autodiff.VariableMap
 
 class Product(val expressionOne: Expression, val expressionTwo: Expression) : Expression() {
     private var containedVariables: Set<Variable> = expressionOne.getVariables() + expressionTwo.getVariables()
@@ -10,11 +11,11 @@ class Product(val expressionOne: Expression, val expressionTwo: Expression) : Ex
         return containedVariables
     }
 
-    override fun evaluate(variables: HashMap<Variable, Double>): Double {
+    override fun evaluate(variables: VariableMap): Double {
         return expressionOne.evaluate(variables) * expressionTwo.evaluate(variables)
     }
 
-    override fun solveJacobian(variables: HashMap<Variable, Double>, jacobian: HashMap<Variable, Double>, path: Double) {
+    override fun solveJacobian(variables: VariableMap, jacobian: VariableMap, path: Double) {
         expressionOne.solveJacobian(variables, jacobian, path * expressionTwo.evaluate(variables))
         expressionTwo.solveJacobian(variables, jacobian, path * expressionOne.evaluate(variables))
     }

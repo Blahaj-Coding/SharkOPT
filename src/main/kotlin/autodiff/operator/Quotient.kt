@@ -2,6 +2,7 @@ package autodiff.operator
 
 import autodiff.Expression
 import autodiff.Variable
+import autodiff.VariableMap
 import kotlin.math.pow
 
 class Quotient(private val numerator: Expression, private val denominator: Expression) : Expression() {
@@ -10,11 +11,11 @@ class Quotient(private val numerator: Expression, private val denominator: Expre
         return containedVariables
     }
 
-    override fun evaluate(variables: HashMap<Variable, Double>): Double {
+    override fun evaluate(variables: VariableMap): Double {
         return numerator.evaluate(variables) / denominator.evaluate(variables)
     }
 
-    override fun solveJacobian(variables: HashMap<Variable, Double>, jacobian: HashMap<Variable, Double>, path: Double) {
+    override fun solveJacobian(variables: VariableMap, jacobian: VariableMap, path: Double) {
         var numeratorGradient = 1 / denominator.evaluate(variables)
         var denominatorGradient = -1 * numerator.evaluate(variables) / denominator.evaluate(variables).pow(2)
         numerator.solveJacobian(variables, jacobian, path * numeratorGradient)
