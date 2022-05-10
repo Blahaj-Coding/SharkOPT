@@ -10,13 +10,14 @@ class GradientDescent(private val function: Expression) {
     /**
      * Runs the function until the solution has converged
      */
-    fun solveMinimum(initialGuess: VariableMap, learningRate: Double = defaultLearningRate,
+    fun solveMinimum(initialGuess: VariableMap,
+                     learningRate: Double = defaultLearningRate,
                      convergenceTolerance: Double = defaultConvergenceTolerance): VariableMap {
         var currentIteration = initialGuess.copy()
         while (true) {
             val jacobian = function.solveJacobian(currentIteration)
             currentIteration = currentIteration.plus(jacobian.times(learningRate))
-            if (jacobian.norm() < defaultConvergenceTolerance) return currentIteration
+            if (jacobian.norm() < convergenceTolerance) return currentIteration
         }
     }
 
@@ -25,13 +26,15 @@ class GradientDescent(private val function: Expression) {
      * to complete the procedure in with the condition to satisfy convergence if
      * a convergence VariableMap is passed into the function
      */
-    fun solveMinimumByIterations(initialGuess: VariableMap, iterations: Int,
-                                 learningRate: Double = defaultLearningRate) : VariableMap {
+    fun solveMinimumByIterations(initialGuess: VariableMap,
+                                 iterations: Int,
+                                 learningRate: Double = defaultLearningRate,
+                                 convergenceTolerance: Double = defaultConvergenceTolerance) : VariableMap {
         var currentIteration = initialGuess.copy()
         for (i in 1..iterations) {
             val jacobian = function.solveJacobian(currentIteration)
             currentIteration = currentIteration.plus(jacobian.times(learningRate))
-            if (jacobian.norm() < defaultConvergenceTolerance) {
+            if (jacobian.norm() < convergenceTolerance) {
                 println("iterations: $i")
                 break
             }
