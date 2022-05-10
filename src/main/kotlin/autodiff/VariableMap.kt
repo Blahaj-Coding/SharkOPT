@@ -1,5 +1,7 @@
 package autodiff
 
+import kotlin.math.sqrt
+
 class VariableMap {
     var map: HashMap<Variable, Double>
 
@@ -29,6 +31,14 @@ class VariableMap {
             newMap.put(key, get(key) * scale)
         }
         return newMap
+    }
+
+    fun norm(): Double {
+        var norm = 0.0
+        for (item in this.map.values) {
+            norm += item!! * item!!
+        }
+        return sqrt(norm)
     }
 
     fun copy(): VariableMap {
