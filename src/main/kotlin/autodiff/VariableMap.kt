@@ -18,7 +18,7 @@ class VariableMap {
     }
 
     fun plus(addend: VariableMap): VariableMap {
-        var newMap = VariableMap()
+        val newMap = VariableMap()
         for (key in this.map.keys) {
             newMap.put(key, get(key) + addend.get(key))
         }
@@ -26,7 +26,7 @@ class VariableMap {
     }
 
     fun times(scale: Double): VariableMap {
-        var newMap = VariableMap()
+        val newMap = VariableMap()
         for (key in this.map.keys) {
             newMap.put(key, get(key) * scale)
         }
@@ -42,7 +42,7 @@ class VariableMap {
     }
 
     fun copy(): VariableMap {
-        var newMap = VariableMap()
+        val newMap = VariableMap()
         newMap.map = HashMap<Variable, Double>(this.map)
         return newMap
     }
