@@ -41,6 +41,12 @@ class VariableMap {
         return sqrt(norm)
     }
 
+    fun dot(other: VariableMap): Double {
+        var dotProduct = 0.0
+        this.map.keys.map {dotProduct += this.get(it) * other.get(it)}
+        return dotProduct
+    }
+
     fun copy(): VariableMap {
         val newMap = VariableMap()
         newMap.map = HashMap<Variable, Double>(this.map)
