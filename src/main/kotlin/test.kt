@@ -2,19 +2,17 @@ package autodiff
 
 import autodiff.*
 import autodiff.operator.*
-import solver.*
-
-var defVal = 5.0
+import autodiff.solver.*
 
 fun main(args: Array<String>) {
-//    var x = Variable("x")
-//    var solver = GradientDescent(Power(x, Constant(4.0)))
-//    var map = VariableMap()
-//    map.put(x, 1.0)
-//    println(solver.solveMinimum(map))
-    test(6.0)
-}
-
-fun test(test: Double = defVal) {
-    println(test)
+    val x = Variable("x")
+    val exp = Power(x, Constant(2.0))
+    val initGuess = VariableMap()
+    initGuess.put(x, -1.0)
+    val direction = VariableMap()
+    direction.put(x, 3.0)
+    val backstab = BacktrackingLineSearch(exp)
+    val alpha = backstab.solveApproximateMinimum(initGuess, direction)
+    println("Alpha: $alpha")
+    println("Solution ${initGuess.plus(direction.times(alpha))}")
 }
