@@ -1,11 +1,13 @@
-package solver
+package autodiff.solver.unconstrained
 
 import autodiff.*
+import autodiff.solver.unconstrained.BacktrackingLineSearch
 
 @Suppress("DuplicatedCode")
 class GradientDescent(private val function: Expression) {
     private val defaultLearningRate = -0.4
-    private val defaultConvergenceTolerance = 1E-4
+    private val defaultConvergenceTolerance = 1E-6
+    private val lineSearch: BacktrackingLineSearch = BacktrackingLineSearch(function)
 
     /**
      * Runs the function until the solution has converged
@@ -15,9 +17,11 @@ class GradientDescent(private val function: Expression) {
                      convergenceTolerance: Double = defaultConvergenceTolerance): VariableMap {
         var currentIteration = initialGuess.copy()
         while (true) {
-            val jacobian = function.solveJacobian(currentIteration)
-            currentIteration = currentIteration.plus(jacobian.times(learningRate))
-            if (jacobian.norm() < convergenceTolerance) return currentIteration
+            val gradient = function.solveGradient(currentIteration)
+            val direction = gradient.times(learningRate)
+            val alpha = lineSearch.solveApproximateMinimum(currentIteration, direction)
+            currentIteration = currentIteration.plus(direction.times(alpha))
+            if (gradient.norm() < convergenceTolerance) return currentIteration
         }
     }
 
@@ -32,9 +36,9 @@ class GradientDescent(private val function: Expression) {
                                  convergenceTolerance: Double = defaultConvergenceTolerance) : VariableMap {
         var currentIteration = initialGuess.copy()
         for (i in 1..iterations) {
-            val jacobian = function.solveJacobian(currentIteration)
-            currentIteration = currentIteration.plus(jacobian.times(learningRate))
-            if (jacobian.norm() < convergenceTolerance) {
+            val gradient = function.solveGradient(currentIteration)
+            currentIteration = currentIteration.plus(gradient.times(learningRate))
+            if (gradient.norm() < convergenceTolerance) {
                 println("iterations: $i")
                 break
             }

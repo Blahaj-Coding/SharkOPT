@@ -1,4 +1,4 @@
-package solver
+package autodiff.solver.unconstrained
 
 abstract class UnconstrainedSolver {
 

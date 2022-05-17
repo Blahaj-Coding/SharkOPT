@@ -3,23 +3,41 @@ package autodiff.operator
 import autodiff.Expression
 import autodiff.Variable
 import autodiff.VariableMap
+import autodiff.Vector
+import kotlin.math.cos
 import kotlin.math.pow
 
 class Quotient(private val numerator: Expression, private val denominator: Expression) : Expression() {
     private var containedVariables: Set<Variable> = numerator.getVariables() + denominator.getVariables()
+    override var value = 0.0
     override fun getVariables(): Set<Variable> {
         return containedVariables
     }
 
     override fun evaluate(variables: VariableMap): Double {
-        return numerator.evaluate(variables) / denominator.evaluate(variables)
+        value = numerator.evaluate(variables) / denominator.evaluate(variables)
+        return value
     }
 
-    override fun solveJacobian(variables: VariableMap, jacobian: VariableMap, path: Double) {
-        var numeratorGradient = 1 / denominator.evaluate(variables)
-        var denominatorGradient = -1 * numerator.evaluate(variables) / denominator.evaluate(variables).pow(2)
-        numerator.solveJacobian(variables, jacobian, path * numeratorGradient)
-        denominator.solveJacobian(variables, jacobian, path * denominatorGradient)
+    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
+        var numeratorGradient = 1 / denominator.value
+        var denominatorGradient = -1 * numerator.value / denominator.value.pow(2)
+        numerator.solveGradient(variables, gradient, path * numeratorGradient)
+        denominator.solveGradient(variables, gradient, path * denominatorGradient)
+    }
+
+    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+        var p1 = numerator.forwardAutoDiff(variable, value, degree)
+        var p2 = denominator.forwardAutoDiff(variable, value, degree)
+        var p = Vector()
+        for (k in 0..degree) {
+            var ck = p1.get(k)
+            for (i in 0 until k) {
+                ck -= p.get(i) * p2.get(k - i)
+            }
+            p.add(ck / p2.get(0))
+        }
+        return p
     }
 
     override fun toString(): String {

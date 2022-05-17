@@ -1,5 +1,6 @@
 package autodiff
 
+import kotlin.math.round
 import kotlin.math.sqrt
 
 class VariableMap {
@@ -54,6 +55,10 @@ class VariableMap {
     }
 
     override fun toString(): String {
-        return map.toString()
+        var str = "{"
+        for (item in map) {
+            str += "${item.key} = ${(item.value*1E4).toInt()/1E4}, "
+        }
+        return "${str.substring(0, str.length - 2)}}"
     }
 }
