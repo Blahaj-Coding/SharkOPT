@@ -1,18 +1,30 @@
 package autodiff
 
-import java.util.Collections
-
 class Variable(val name: String): Expression() {
+    override var value = 0.0
+
     override fun getVariables(): Set<Variable> {
         return setOf(this)
     }
 
     override fun evaluate(variables: VariableMap): Double {
-        return variables.get(this)
+        value = variables.get(this)
+        return value
     }
 
-    override fun solveJacobian(variables: VariableMap, jacobian: VariableMap, path: Double) {
-        jacobian.put(this, jacobian.get(this) + path)
+    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
+        gradient.put(this, gradient.get(this) + path)
+    }
+
+    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+        var vector = Vector()
+        vector.add(value.get(this))
+        if (variable == this) vector.add(1.0)
+        else vector.add(0.0)
+        for (i in 2..degree) {
+            vector.add(0.0)
+        }
+        return vector
     }
 
     override fun toString(): String {

@@ -1,25 +1,45 @@
 package autodiff.operator
 
-import autodiff.Expression
-import autodiff.Variable
-import autodiff.VariableMap
+import autodiff.*
+import autodiff.Vector
 
 import kotlin.math.sin
 import kotlin.math.cos
 
 class Sin(private val expression: Expression) : Expression() {
     private var containedVariables = expression.getVariables()
+    override var value = 0.0
 
     override fun getVariables(): Set<Variable> {
         return containedVariables
     }
 
     override fun evaluate(variables: VariableMap): Double {
-        return sin(expression.evaluate(variables))
+        value = sin(expression.evaluate(variables))
+        return value
     }
 
-    override fun solveJacobian(variables: VariableMap, jacobian: VariableMap, path: Double) {
-        expression.solveJacobian(variables, jacobian, path * cos(expression.evaluate(variables)))
+    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
+        expression.solveGradient(variables, gradient, path * cos(expression.value))
+    }
+
+    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+        var g = expression.forwardAutoDiff(variable, value, degree)
+        var pSin = Vector()
+        var pCos = Vector()
+        pSin.add(sin(g.get(0)))
+        pCos.add(cos(g.get(0)))
+        for (k in 1..degree) {
+            var ckSin = 0.0
+            var ckCos = 0.0
+            for (i in 1..k) {
+                ckSin += i * g.get(i) * pCos.get(k - i)
+                ckCos += i * g.get(i) * pSin.get(k - i)
+            }
+            pSin.add(ckSin / k)
+            pCos.add(-ckCos / k)
+        }
+        return pSin
     }
 
     override fun toString(): String {
