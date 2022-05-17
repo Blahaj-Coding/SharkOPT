@@ -1,5 +1,7 @@
 # HelixOptimizer
 
+Join the discord and contribute! https://discord.gg/kqe74EER
+
 A non-linear problem solver using automatic differentiation and penalty methods.
 
 ## Automatic Differentiation
