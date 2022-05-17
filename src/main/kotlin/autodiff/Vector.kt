@@ -15,6 +15,10 @@ class Vector {
         return values.get(index)
     }
 
+    fun set(index: Int, value: Double) {
+        values.set(index, value)
+    }
+
     fun plus(other: Vector): Vector {
         var vector = Vector()
         for (k in 0..(values.size-1)) {
