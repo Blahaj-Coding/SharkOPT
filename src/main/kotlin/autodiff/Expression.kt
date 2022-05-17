@@ -32,7 +32,18 @@ abstract class Expression {
 
     abstract fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector
 
-//    abstract fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int, multiplyByNFactorial: Boolean): Vector
+    /** Use this method for getting derivatives, forwardAutoDiff returns the coefficients of the expression's
+     *  Taylor polynomial which require multiplication by n! to yield the proper derivatives.
+     */
+    fun solveDerivatives(variable: Variable, value: VariableMap, degree: Int): Vector {
+        var coef = forwardAutoDiff(variable, value, degree)
+        var nFact = 1.0
+        for (k in 1 until coef.values.size) {
+            nFact *= k
+            coef.set(k, coef.get(k) * nFact)
+        }
+        return coef
+    }
 
     fun solveGradient(variables: VariableMap): VariableMap {
         var gradient = VariableMap()
