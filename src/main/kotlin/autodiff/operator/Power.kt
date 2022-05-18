@@ -6,7 +6,7 @@ import kotlin.math.ln
 import kotlin.math.pow
 
 // TODO: add support for arbitrary non-constant exponents
-class Power(private val base: Expression, private val exponent: Constant): Expression() {
+class Power(val base: Expression, val exponent: Constant): Expression() {
     private var containedVariables = base.getVariables() + exponent.getVariables()
     override var value = 0.0
 

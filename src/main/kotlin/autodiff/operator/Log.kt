@@ -4,7 +4,7 @@ import autodiff.*
 import kotlin.math.ln
 import kotlin.math.log
 
-class Log(private val base: Expression, private val expression: Expression) : Expression() {
+class Log(val base: Expression, val expression: Expression) : Expression() {
     private var containedVariables = base.getVariables() + expression.getVariables()
     override var value = 0.0
 

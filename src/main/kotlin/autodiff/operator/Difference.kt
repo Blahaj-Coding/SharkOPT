@@ -6,8 +6,8 @@ import autodiff.VariableMap
 import autodiff.Vector
 import kotlin.math.cos
 
-class Difference(private val minuend: Expression, private val subtrahend: Expression) : Expression() {
-    private var containedVariables: Set<Variable> = minuend.getVariables() + subtrahend.getVariables()
+class Difference(val left: Expression, val right: Expression) : Expression() {
+    private var containedVariables: Set<Variable> = left.getVariables() + right.getVariables()
     override var value = 0.0
 
     override fun getVariables(): Set<Variable> {
@@ -15,21 +15,21 @@ class Difference(private val minuend: Expression, private val subtrahend: Expres
     }
 
     override fun evaluate(variables: VariableMap): Double {
-        value = minuend.evaluate(variables) - subtrahend.evaluate(variables)
+        value = left.evaluate(variables) - right.evaluate(variables)
         return value
     }
 
     override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
-        minuend.solveGradient(variables, gradient, path)
-        subtrahend.solveGradient(variables, gradient, path * -1)
+        left.solveGradient(variables, gradient, path)
+        right.solveGradient(variables, gradient, path * -1)
     }
 
     override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
-        val p1 = minuend.forwardAutoDiff(variable, value, degree)
-        val p2 = subtrahend.forwardAutoDiff(variable, value, degree)
+        val p1 = left.forwardAutoDiff(variable, value, degree)
+        val p2 = right.forwardAutoDiff(variable, value, degree)
         return p1.minus(p2)
     }
     override fun toString(): String {
-        return "(${minuend} - ${subtrahend})"
+        return "(${left} - ${right})"
     }
 }

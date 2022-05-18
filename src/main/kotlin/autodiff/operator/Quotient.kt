@@ -7,7 +7,7 @@ import autodiff.Vector
 import kotlin.math.cos
 import kotlin.math.pow
 
-class Quotient(private val numerator: Expression, private val denominator: Expression) : Expression() {
+class Quotient(val numerator: Expression, val denominator: Expression) : Expression() {
     private var containedVariables: Set<Variable> = numerator.getVariables() + denominator.getVariables()
     override var value = 0.0
     override fun getVariables(): Set<Variable> {
