@@ -14,19 +14,21 @@ class Power(val base: Expression, val exponent: Constant): Expression() {
         return containedVariables
     }
 
-    override fun evaluate(variables: VariableMap): Double {
+    override fun evaluate(variables: Vector): Double {
         value = base.evaluate(variables).pow(exponent.evaluate(variables))
         return value
     }
 
-    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
+    // df/du u^v = v * u^(v - 1)
+    // df/dv u^v = ln(u) * u^v
+    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {
         var baseGradient = exponent.value * base.value.pow(exponent.value - 1)
         var expGradient = this.value * ln(base.value)
         base.solveGradient(variables, gradient, path * baseGradient)
         exponent.solveGradient(variables, gradient, path * expGradient)
     }
 
-    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
         var g = base.forwardAutoDiff(variable, value, degree)
         var a = exponent.value
         var coef = Vector()

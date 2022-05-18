@@ -2,45 +2,23 @@ package autodiff.solver.unconstrained
 
 import autodiff.*
 
-class GradientDescent(private val function: Expression) {
-    private val defaultLearningRate = -0.00189
-    private val defaultConvergenceTolerance = 1E-4
-    private val lineSearch: BacktrackingLineSearch = BacktrackingLineSearch(function)
+class GradientDescent(): NLPSolver() {
+    private val learningRate = -0.0001
+    private val convergenceTolerance = 1E-4
 
     /**
      * Runs the function until the solution has converged
      */
-    fun solveMinimum(initialGuess: VariableMap,
-                     learningRate: Double = defaultLearningRate,
-                     convergenceTolerance: Double = defaultConvergenceTolerance): VariableMap {
-        var currentIteration = initialGuess.copy()
+    override fun solve(): MutableMap<Variable, Double> {
+        var currentIteration = initialGuess
+        val lineSearch = BacktrackingLineSearch(cost)
         while (true) {
-            val gradient = function.solveGradient(currentIteration)
-            val direction = gradient.times(learningRate)
+            val gradient = cost.solveGradient(currentIteration)
+            println(gradient.norm())
+            val direction = gradient * learningRate
             val alpha = lineSearch.solveApproximateMinimum(currentIteration, direction)
             currentIteration = currentIteration.plus(direction.times(alpha))
             if (gradient.norm() < convergenceTolerance) return currentIteration
         }
-    }
-
-    /**
-     * Solves for the minimum of the function given a certain number of iterations
-     * to complete the procedure in with the condition to satisfy convergence if
-     * a convergence VariableMap is passed into the function
-     */
-    fun solveMinimumByIterations(initialGuess: VariableMap,
-                                 iterations: Int,
-                                 learningRate: Double = defaultLearningRate,
-                                 convergenceTolerance: Double = defaultConvergenceTolerance) : VariableMap {
-        var currentIteration = initialGuess.copy()
-        for (i in 1..iterations) {
-            val gradient = function.solveGradient(currentIteration)
-            currentIteration = currentIteration.plus(gradient.times(learningRate))
-            if (gradient.norm() < convergenceTolerance) {
-                println("iterations: $i")
-                break
-            }
-        }
-        return currentIteration
     }
 }

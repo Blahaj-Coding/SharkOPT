@@ -14,19 +14,21 @@ class Quotient(val numerator: Expression, val denominator: Expression) : Express
         return containedVariables
     }
 
-    override fun evaluate(variables: VariableMap): Double {
+    override fun evaluate(variables: Vector): Double {
         value = numerator.evaluate(variables) / denominator.evaluate(variables)
         return value
     }
 
-    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
+    // df/du (u / v) = 1 / v
+    // df/dv (u / v) = -u / v^2
+    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {
         var numeratorGradient = 1 / denominator.value
         var denominatorGradient = -1 * numerator.value / denominator.value.pow(2)
         numerator.solveGradient(variables, gradient, path * numeratorGradient)
         denominator.solveGradient(variables, gradient, path * denominatorGradient)
     }
 
-    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
         var p1 = numerator.forwardAutoDiff(variable, value, degree)
         var p2 = denominator.forwardAutoDiff(variable, value, degree)
         var p = Vector()

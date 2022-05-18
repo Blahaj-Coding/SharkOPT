@@ -12,12 +12,14 @@ class Log(val base: Expression, val expression: Expression) : Expression() {
         return containedVariables
     }
 
-    override fun evaluate(variables: VariableMap): Double {
+    override fun evaluate(variables: Vector): Double {
         value = log(expression.evaluate(variables), base.evaluate(variables))
         return value
     }
 
-    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
+    // df/du log_u(v) = -log_u(v) / (v * ln(v))
+    // df/dv log_u(v) = 1 / (ln(u) * v)
+    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {
         val baseValue = base.value
         val expValue = expression.value
         val baseGradient = -log(expValue, baseValue) / (baseValue * ln(baseValue))
@@ -27,7 +29,7 @@ class Log(val base: Expression, val expression: Expression) : Expression() {
     }
 
     // Identity log_g(x)f(x) = log(f(x))/log(g(x))
-    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
         var p1 = forwardAutoDiff(variable, value, degree, expression.forwardAutoDiff(variable, value, degree))
         var p2 = forwardAutoDiff(variable, value, degree, base.forwardAutoDiff(variable, value, degree))
         // Polynomial division - try to find a way to avoid duplicating code already in the Quotient class
@@ -43,7 +45,7 @@ class Log(val base: Expression, val expression: Expression) : Expression() {
     }
 
     // Taylor polynomial of ln(f(x))
-    fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int, g: Vector): Vector {
+    fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int, g: Vector): Vector {
         var coef = Vector()
         coef.add(ln(g[0]))
         for (k in 1..degree) {

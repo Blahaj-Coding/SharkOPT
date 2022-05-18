@@ -1,15 +1,16 @@
 package autodiff.solver.constrained
 
-import autodiff.Constant
-import autodiff.Expression
-import autodiff.VariableMap
+import autodiff.*
 import autodiff.operator.Power
 import autodiff.solver.unconstrained.GradientDescent
+import autodiff.solver.unconstrained.NLPSolver
 
-class PenaltyMethod {
-    var initialGuess = VariableMap()
+class PenaltyMethod: NLPSolver() {
     var constraints = ArrayList<Expression>()
-    var cost: Expression = Constant(0.0)
+
+    override fun solve(): MutableMap<Variable, Double> {
+        TODO("Not yet implemented")
+    }
 
     fun addEqualityConstraint(LHS: Expression, RHS: Expression) {
         constraints.add(Power(LHS - RHS, Constant(2.0)))
@@ -27,13 +28,14 @@ class PenaltyMethod {
         this.cost = cost
     }
 
-    fun solve(penalty: Double): VariableMap {
-        var constraintCost: Expression = Constant(0.0)
-        for (constraint in constraints) {
-            constraintCost = constraintCost + constraint
-        }
-        val solver = GradientDescent(cost + Constant(penalty) * constraintCost)
-        return solver.solveMinimum(initialGuess)
+    fun solve(penalty: Double): MutableMap<Variable, Double> {
+//        var constraintCost: Expression = Constant(0.0)
+//        for (constraint in constraints) {
+//            constraintCost = constraintCost + constraint
+//        }
+//        val solver = GradientDescent(cost + Constant(penalty) * constraintCost)
+//        return solver.solveMinimum(initialGuess)
+        TODO("Not yet implemented")
     }
 
 

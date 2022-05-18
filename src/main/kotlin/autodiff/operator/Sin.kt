@@ -14,16 +14,17 @@ class Sin(val expression: Expression) : Expression() {
         return containedVariables
     }
 
-    override fun evaluate(variables: VariableMap): Double {
+    override fun evaluate(variables: Vector): Double {
         value = sin(expression.evaluate(variables))
         return value
     }
 
-    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
+    // df/du sin(u) = cos(u)
+    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {
         expression.solveGradient(variables, gradient, path * cos(expression.value))
     }
 
-    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
         var g = expression.forwardAutoDiff(variable, value, degree)
         var pSin = Vector()
         var pCos = Vector()

@@ -7,12 +7,12 @@ import autodiff.solver.unconstrained.GradientDescent
 import kotlin.system.measureNanoTime
 
 fun main(args: Array<String>) {
-    var n = 500
+    val solver = AltaLineSearch()
+    var n = 1000
     var xs = ArrayList<Variable>()
-    var varMap = VariableMap()
     for (k in 0..n) {
-        xs.add(Variable("x$k"))
-        varMap[xs[k]] = 1.0
+        xs.add(solver.variable())
+        solver.setInitialValue(xs[k], 1.0)
     }
     var cost: Expression = Constant(0.0)
     for (i in 0..n) {
@@ -20,9 +20,8 @@ fun main(args: Array<String>) {
     }
     cost *= 0.5
 
-    var solver = AltaLineSearch(cost)
     var time = measureNanoTime {
-        solver.solveApproximateMinimum(varMap)
+        solver.solve()
     }
     println(time/1E9)
 

@@ -16,16 +16,17 @@ class Cos(val expression: Expression) : Expression() {
         return containedVariables
     }
 
-    override fun evaluate(variables: VariableMap): Double {
+    override fun evaluate(variables: Vector): Double {
         value = cos(expression.evaluate(variables))
         return value
     }
 
-    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
+    // df/du cos(u) = -sin(u)
+    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {
         expression.solveGradient(variables, gradient, path * -sin(expression.value))
     }
 
-    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
         val g = expression.forwardAutoDiff(variable, value, degree)
         val pSin = Vector()
         val pCos = Vector()

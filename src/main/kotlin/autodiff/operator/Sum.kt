@@ -13,17 +13,19 @@ class Sum(val left: Expression, val right: Expression) : Expression() {
         return containedVariables
     }
 
-    override fun evaluate(variables: VariableMap): Double {
-        value = left.evaluate(variables ) + right.evaluate(variables)
+    override fun evaluate(variables: Vector): Double {
+        value = left.evaluate(variables) + right.evaluate(variables)
         return value
     }
 
-    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
+    // df/du (u + v) = 1
+    // df/dv (u + v) = 1
+    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {
         left.solveGradient(variables, gradient, path)
         right.solveGradient(variables, gradient, path)
     }
 
-    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
         val p1 = left.forwardAutoDiff(variable, value, degree)
         val p2 = right.forwardAutoDiff(variable, value, degree)
         return p1.plus(p2)

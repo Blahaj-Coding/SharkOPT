@@ -11,7 +11,7 @@ class Min(private val a: Expression, private val b: Expression) : Expression() {
         return containedVariables
     }
 
-    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
+    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {
         val a0 = a.evaluate(variables)
         val b0 = b.evaluate(variables)
 
@@ -19,7 +19,7 @@ class Min(private val a: Expression, private val b: Expression) : Expression() {
         else         b.solveGradient(variables, gradient, path)
     }
 
-    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
         val a0 = a.evaluate(value)
         val b0 = b.evaluate(value)
 
@@ -27,7 +27,7 @@ class Min(private val a: Expression, private val b: Expression) : Expression() {
         else b.forwardAutoDiff(variable, value, degree)
     }
 
-    override fun evaluate(variables: VariableMap): Double {
+    override fun evaluate(variables: Vector): Double {
         return kotlin.math.min(a.evaluate(variables), b.evaluate(variables))
     }
 

@@ -1,24 +1,24 @@
 package autodiff
 
-class Variable(val name: String): Expression() {
+class Variable(val index: Int): Expression() {
     override var value = 0.0
 
     override fun getVariables(): Set<Variable> {
         return setOf(this)
     }
 
-    override fun evaluate(variables: VariableMap): Double {
-        value = variables.get(this)
+    override fun evaluate(variables: Vector): Double {
+        value = variables[index]
         return value
     }
 
-    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
-        gradient[this] += path
+    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {
+        gradient[index] += path
     }
 
-    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
         var vector = Vector()
-        vector.add(value.get(this))
+        vector.add(value[index])
         if (variable == this) vector.add(1.0)
         else vector.add(0.0)
         for (i in 2..degree) {
@@ -28,6 +28,6 @@ class Variable(val name: String): Expression() {
     }
 
     override fun toString(): String {
-        return name
+        return "v$index"
     }
 }

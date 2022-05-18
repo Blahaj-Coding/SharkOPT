@@ -22,16 +22,16 @@ abstract class Expression {
     operator fun div(expression : Expression) = Quotient(this, expression)
     operator fun div(value : Double) = Quotient(this, Constant(value))
 
-    abstract fun evaluate(variables: VariableMap): Double
+    abstract fun evaluate(variables: Vector): Double
 
-    abstract fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double)
+    abstract fun solveGradient(variables: Vector, gradient: Vector, path: Double)
 
-    abstract fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector
+    abstract fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector
 
     /** Use this method for getting derivatives, forwardAutoDiff returns the coefficients of the expression's
      *  Taylor polynomial which require multiplication by n! to yield the proper derivatives.
      */
-    fun solveDerivatives(variable: Variable, value: VariableMap, degree: Int): Vector {
+    fun solveDerivatives(variable: Variable, value: Vector, degree: Int): Vector {
         var coef = forwardAutoDiff(variable, value, degree)
         var nFact = 1.0
         for (k in 1 until coef.values.size) {
@@ -41,9 +41,9 @@ abstract class Expression {
         return coef
     }
 
-    fun solveGradient(variables: VariableMap): VariableMap {
-        var gradient = VariableMap()
-        getVariables().map {gradient[it] = 0.0}
+    fun solveGradient(variables: Vector): Vector {
+        var gradient = Vector()
+        for (k in 1..variables.values.size) gradient.add(0.0)
         evaluate(variables)
         solveGradient(variables, gradient, 1.0)
         return gradient

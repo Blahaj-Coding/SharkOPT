@@ -9,13 +9,13 @@ class Constant(val num : Double) : Expression() {
         return mutableSetOf();
     }
 
-    override fun evaluate(variables: VariableMap): Double {
+    override fun evaluate(variables: Vector): Double {
         return value
     }
 
-    override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {}
+    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {}
 
-    override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
+    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
         var vector = Vector()
         vector.add(this.value)
         for (k in 1..degree) {

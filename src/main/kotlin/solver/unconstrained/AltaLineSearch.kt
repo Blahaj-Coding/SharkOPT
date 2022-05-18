@@ -3,33 +3,35 @@ package autodiff.solver.unconstrained
 import autodiff.*
 import autodiff.operator.*
 
-class AltaLineSearch(private val function: Expression) {
+class AltaLineSearch(): NLPSolver() {
+    private var alpha = variable()
+
     /**
      * Optimizes the step size "alpha" for gradient descent to minimize the function f(x, y, z, ...)
      * by iterating with Newton's method using the derivatives df/dalpha & d^2f/dalpha^2
       */
-    fun solveApproximateMinimum(initialGuess: VariableMap): VariableMap {
-        var iteration = initialGuess
-        val alpha = Variable("alpha")
+    override fun solve(): MutableMap<Variable, Double> {
+        var currentIteration = initialGuess
         val alphaMap = mutableMapOf<Variable, Expression>()
         // Arbitrary number of iterations - the terminating condition should depend on some sort of convergence estimate
         for (k in 1..200) {
-            val gradient = function.solveGradient(iteration)
-            for ((variable, gradientValue) in gradient.map) {
+            val gradient = cost.solveGradient(currentIteration)
+            for (variable in variables) {
                  // Substitute the linear relationship for alpha into each variable x = x(alpha) + x'(alpha) * alpha)
-                alphaMap[variable] = alpha * gradientValue + iteration[variable]
+                alphaMap[variable] = alpha * gradient[variable.index] + currentIteration[variable.index]
             }
-            val alphaFunction = replaceVariables(function, alphaMap)
-            var varMap = VariableMap()
-            varMap[alpha] = 0.0 // alpha is initialized to 0
+            val alphaFunction = replaceVariables(cost, alphaMap)
+            currentIteration[alpha.index] = 0.0 // alpha is initialized to 0
             // Fixed number of Newton iterations - a better method of estimating convergence should be used
             for (k in 1..2) {
-                var coef = alphaFunction.solveDerivatives(alpha, varMap, 2) // derivatives of f with respect to alpha
-                varMap[alpha] -= coef[1] / coef[2]
+                var coef = alphaFunction.solveDerivatives(alpha, currentIteration, 2) // derivatives of f with respect to alpha
+                currentIteration[alpha.index] -= coef[1] / coef[2]
             }
-            iteration += gradient * varMap[alpha]
+            currentIteration += gradient * currentIteration[alpha.index]
         }
-        return iteration
+        var solutionMap = vectorToMap(currentIteration)
+        solutionMap.remove(alpha) // no touchie!
+        return solutionMap
     }
 
     private fun replaceVariables(exp: Expression, map: MutableMap<Variable, Expression>): Expression = when(exp) {
