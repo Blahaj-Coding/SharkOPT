@@ -13,7 +13,7 @@ class Variable(val name: String): Expression() {
     }
 
     override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
-        gradient.put(this, gradient.get(this) + path)
+        gradient[this] += path
     }
 
     override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {

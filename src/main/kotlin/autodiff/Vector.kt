@@ -11,26 +11,26 @@ class Vector {
         values.removeAt(index)
     }
 
-    fun get(index: Int): Double {
-        return values.get(index)
+    operator fun get(index: Int): Double {
+        return values[index]
     }
 
-    fun set(index: Int, value: Double) {
-        values.set(index, value)
+    operator fun set(index: Int, value: Double) {
+        values[index] = value
     }
 
     fun plus(other: Vector): Vector {
         var vector = Vector()
-        for (k in 0..(values.size-1)) {
-            vector.add(values.get(k) + other.get(k))
+        for (k in 0 until values.size) {
+            vector.add(values[k] + other.get(k))
         }
         return vector
     }
 
     fun minus(other: Vector): Vector {
         var vector = Vector()
-        for (k in 0..(values.size-1)) {
-            vector.add(values.get(k) - other.get(k))
+        for (k in 0 until values.size) {
+            vector.add(values[k] - other.get(k))
         }
         return vector
     }

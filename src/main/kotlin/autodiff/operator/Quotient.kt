@@ -31,11 +31,11 @@ class Quotient(val numerator: Expression, val denominator: Expression) : Express
         var p2 = denominator.forwardAutoDiff(variable, value, degree)
         var p = Vector()
         for (k in 0..degree) {
-            var ck = p1.get(k)
+            var ck = p1[k]
             for (i in 0 until k) {
-                ck -= p.get(i) * p2.get(k - i)
+                ck -= p[i] * p2[k - i]
             }
-            p.add(ck / p2.get(0))
+            p.add(ck / p2[0])
         }
         return p
     }

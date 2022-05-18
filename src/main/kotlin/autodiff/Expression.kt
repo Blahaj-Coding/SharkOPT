@@ -36,14 +36,14 @@ abstract class Expression {
         var nFact = 1.0
         for (k in 1 until coef.values.size) {
             nFact *= k
-            coef.set(k, coef.get(k) * nFact)
+            coef[k] *= nFact
         }
         return coef
     }
 
     fun solveGradient(variables: VariableMap): VariableMap {
         var gradient = VariableMap()
-        getVariables().map {gradient.put(it, 0.0)}
+        getVariables().map {gradient[it] = 0.0}
         evaluate(variables)
         solveGradient(variables, gradient, 1.0)
         return gradient

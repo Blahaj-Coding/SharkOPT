@@ -2,6 +2,7 @@ package autodiff.solver.unconstrained
 
 import autodiff.*
 
+// Implements equation 3.4 on page 33, chapter 3 http://www.apmath.spbu.ru/cnsa/pdf/monograf/Numerical_Optimization2006.pdf
 class BacktrackingLineSearch(private val function: Expression) {
     fun solveApproximateMinimum(initialGuess: VariableMap, direction: VariableMap): Double {
         val m: Double = function.solveGradient(initialGuess).dot(direction) // directional derivative

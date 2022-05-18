@@ -10,25 +10,24 @@ class AltaLineSearch(private val function: Expression) {
       */
     fun solveApproximateMinimum(initialGuess: VariableMap): VariableMap {
         var iteration = initialGuess
-        var alpha = Variable("alpha")
+        val alpha = Variable("alpha")
+        val alphaMap = mutableMapOf<Variable, Expression>()
         // Arbitrary number of iterations - the terminating condition should depend on some sort of convergence estimate
         for (k in 1..200) {
             val gradient = function.solveGradient(iteration)
-            var alphaMap = mutableMapOf<Variable, Expression>()
             for ((variable, gradientValue) in gradient.map) {
                  // Substitute the linear relationship for alpha into each variable x = x(alpha) + x'(alpha) * alpha)
-                alphaMap[variable] = alpha * gradientValue + iteration.get(variable)
+                alphaMap[variable] = alpha * gradientValue + iteration[variable]
             }
             val alphaFunction = replaceVariables(function, alphaMap)
             var varMap = VariableMap()
-            varMap.put(alpha, 0.0) // alpha is initialized to 0
+            varMap[alpha] = 0.0 // alpha is initialized to 0
             // Fixed number of Newton iterations - a better method of estimating convergence should be used
             for (k in 1..2) {
                 var coef = alphaFunction.solveDerivatives(alpha, varMap, 2) // derivatives of f with respect to alpha
-                var newAlpha = varMap.get(alpha) - coef.get(1) / coef.get(2)
-                varMap.put(alpha, newAlpha)
+                varMap[alpha] -= coef[1] / coef[2]
             }
-            iteration += gradient * varMap.get(alpha)
+            iteration += gradient * varMap[alpha]
         }
         return iteration
     }

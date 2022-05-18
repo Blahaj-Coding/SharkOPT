@@ -20,23 +20,23 @@ class Power(val base: Expression, val exponent: Constant): Expression() {
     }
 
     override fun solveGradient(variables: VariableMap, gradient: VariableMap, path: Double) {
-        var baseJacobian = exponent.value * base.value.pow(exponent.value - 1)
-        var expJacobian = this.value * ln(base.value)
-        base.solveGradient(variables, gradient, path * baseJacobian)
-        exponent.solveGradient(variables, gradient, path * expJacobian)
+        var baseGradient = exponent.value * base.value.pow(exponent.value - 1)
+        var expGradient = this.value * ln(base.value)
+        base.solveGradient(variables, gradient, path * baseGradient)
+        exponent.solveGradient(variables, gradient, path * expGradient)
     }
 
     override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
         var g = base.forwardAutoDiff(variable, value, degree)
         var a = exponent.value
         var coef = Vector()
-        coef.add(g.get(0).pow(a))
+        coef.add(g[0].pow(a))
         for (k in 1..degree) {
             var ck = 0.0
             for (i in 1..k) {
-                ck += ((a + 1) * i / k - 1) * g.get(i) * coef.get(k - i)
+                ck += ((a + 1) * i / k - 1) * g[i] * coef[k - i]
             }
-            coef.add(ck / g.get(0))
+            coef.add(ck / g[0])
         }
         return coef
     }
