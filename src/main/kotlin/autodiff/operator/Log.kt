@@ -33,11 +33,11 @@ class Log(val base: Expression, val expression: Expression) : Expression() {
         // Polynomial division - try to find a way to avoid duplicating code already in the Quotient class
         var p = Vector()
         for (k in 0..degree) {
-            var ck = p1.get(k)
+            var ck = p1[k]
             for (i in 0 until k) {
-                ck -= p.get(i) * p2.get(k - i)
+                ck -= p[i] * p2[k - i]
             }
-            p.add(ck / p2.get(0))
+            p.add(ck / p2[0])
         }
         return p
     }
@@ -45,13 +45,13 @@ class Log(val base: Expression, val expression: Expression) : Expression() {
     // Taylor polynomial of ln(f(x))
     fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int, g: Vector): Vector {
         var coef = Vector()
-        coef.add(ln(g.get(0)))
+        coef.add(ln(g[0]))
         for (k in 1..degree) {
             var ck = 0.0
             for (i in 1 until k) {
-                ck += i * coef.get(i) * g.get(k - i)
+                ck += i * coef[i] * g[k - i]
             }
-            coef.add((g.get(k) - ck / k) / (g.get(0)))
+            coef.add((g[k] - ck / k) / (g[0]))
         }
         return coef
     }

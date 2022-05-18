@@ -1,12 +1,10 @@
 package autodiff.solver.unconstrained
 
 import autodiff.*
-import autodiff.solver.unconstrained.BacktrackingLineSearch
 
-@Suppress("DuplicatedCode")
 class GradientDescent(private val function: Expression) {
-    private val defaultLearningRate = -0.4
-    private val defaultConvergenceTolerance = 1E-6
+    private val defaultLearningRate = -0.00189
+    private val defaultConvergenceTolerance = 1E-4
     private val lineSearch: BacktrackingLineSearch = BacktrackingLineSearch(function)
 
     /**

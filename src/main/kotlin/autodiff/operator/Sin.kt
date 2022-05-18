@@ -27,14 +27,14 @@ class Sin(val expression: Expression) : Expression() {
         var g = expression.forwardAutoDiff(variable, value, degree)
         var pSin = Vector()
         var pCos = Vector()
-        pSin.add(sin(g.get(0)))
-        pCos.add(cos(g.get(0)))
+        pSin.add(sin(g[0]))
+        pCos.add(cos(g[0]))
         for (k in 1..degree) {
             var ckSin = 0.0
             var ckCos = 0.0
             for (i in 1..k) {
-                ckSin += i * g.get(i) * pCos.get(k - i)
-                ckCos += i * g.get(i) * pSin.get(k - i)
+                ckSin += i * g[i] * pCos[k - i]
+                ckCos += i * g[i] * pSin[k - i]
             }
             pSin.add(ckSin / k)
             pCos.add(-ckCos / k)

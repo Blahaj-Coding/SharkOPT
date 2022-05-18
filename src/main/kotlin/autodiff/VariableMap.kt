@@ -4,32 +4,28 @@ import kotlin.math.round
 import kotlin.math.sqrt
 
 class VariableMap {
-    var map: HashMap<Variable, Double>
+    var map = mutableMapOf<Variable, Double>()
 
-    init {
-        this.map = HashMap<Variable, Double>()
+    operator fun set(variable: Variable, value: Double) {
+        this.map[variable] = value
     }
 
-    fun put(variable: Variable, value: Double) {
-        this.map.put(variable, value)
-    }
-
-    fun get(key: Variable): Double {
+    operator fun get(key: Variable): Double {
         return this.map[key]!!
     }
 
     operator fun plus(addend: VariableMap): VariableMap {
         val newMap = VariableMap()
-        for (key in this.map.keys) {
-            newMap.put(key, get(key) + addend.get(key))
+        for ((variable, value) in this.map) {
+            newMap[variable] = value + addend[variable]
         }
         return newMap
     }
 
     operator fun times(scale: Double): VariableMap {
         val newMap = VariableMap()
-        for (key in this.map.keys) {
-            newMap.put(key, get(key) * scale)
+        for ((variable, value) in this.map) {
+            newMap[variable] = value * scale
         }
         return newMap
     }
@@ -44,7 +40,7 @@ class VariableMap {
 
     fun dot(other: VariableMap): Double {
         var dotProduct = 0.0
-        this.map.keys.map {dotProduct += this.get(it) * other.get(it)}
+        this.map.keys.map {dotProduct += this[it] * other[it] }
         return dotProduct
     }
 

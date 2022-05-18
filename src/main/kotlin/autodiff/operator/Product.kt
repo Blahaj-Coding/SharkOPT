@@ -31,7 +31,7 @@ class Product(val left: Expression, val right: Expression) : Expression() {
         for (i in 0..degree) {
             var ck = 0.0
             for (j in 0..i) {
-                ck += p1.get(j) * p2.get(i - j)
+                ck += p1[j] * p2[i - j]
             }
             p.add(ck)
         }
