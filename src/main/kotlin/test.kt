@@ -32,7 +32,7 @@ fun main(args: Array<String>) {
     }
     var cost: Expression = Constant(0.0)
     for (i in 0..n) {
-        cost = cost + xs.get(i) * xs.get(i) * i.toDouble() - xs.get(n)
+        cost += xs.get(i) * xs.get(i) * i.toDouble() - xs.get(n)
     }
     cost = cost * 0.5
 
