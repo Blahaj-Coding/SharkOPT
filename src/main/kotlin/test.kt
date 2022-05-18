@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
     for (i in 0..n) {
         cost += xs.get(i) * xs.get(i) * i.toDouble() - xs.get(n)
     }
-    cost = cost * 0.5
+    cost *= 0.5
 
     var solver = AltaLineSearch(cost)
     var time = measureNanoTime {
