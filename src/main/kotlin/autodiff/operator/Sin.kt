@@ -6,7 +6,7 @@ import autodiff.Vector
 import kotlin.math.sin
 import kotlin.math.cos
 
-class Sin(private val expression: Expression) : Expression() {
+class Sin(val expression: Expression) : Expression() {
     private var containedVariables = expression.getVariables()
     override var value = 0.0
 

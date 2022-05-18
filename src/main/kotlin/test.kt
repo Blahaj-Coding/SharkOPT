@@ -23,7 +23,7 @@ fun main(args: Array<String>) {
 //    map1.put(x, 5.0)
 //
 //    println(exp1.forwardAutoDiff(x, map1, 3))
-    var n = 500
+    var n = 1000
     var xs = ArrayList<Variable>()
     var varMap = VariableMap()
     for (k in 0..n) {
@@ -32,9 +32,9 @@ fun main(args: Array<String>) {
     }
     var cost: Expression = Constant(0.0)
     for (i in 0..n) {
-        cost = cost + xs.get(i) * xs.get(i) * Constant(i.toDouble()) - xs.get(n)
+        cost = cost + xs.get(i) * xs.get(i) * i.toDouble() - xs.get(n)
     }
-    cost = cost * Constant(0.5)
+    cost = cost * 0.5
 
     var solver = AltaLineSearch(cost)
     var time = measureNanoTime {

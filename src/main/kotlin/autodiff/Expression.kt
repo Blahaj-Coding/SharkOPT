@@ -10,21 +10,17 @@ abstract class Expression {
 
     abstract fun getVariables(): Set<Variable>
 
-    operator fun plus(expression : Expression) : Expression {
-        return Sum(this, expression)
-    }
+    operator fun plus(expression : Expression) : Expression { return Sum(this, expression) }
+    operator fun plus(value : Double) : Expression { return Sum(this, Constant(value)) }
 
-    operator fun minus(expression : Expression) : Expression {
-        return Difference(this, expression)
-    }
+    operator fun minus(expression : Expression) : Expression { return Difference(this, expression) }
+    operator fun minus(value : Double) : Expression { return Difference(this, Constant(value)) }
 
-    operator fun times(expression : Expression) : Expression {
-        return Product(this, expression)
-    }
+    operator fun times(expression : Expression) : Expression { return Product(this, expression) }
+    operator fun times(value : Double) : Expression { return Product(this, Constant(value)) }
 
-    operator fun div(expression : Expression) : Expression {
-        return Quotient(this, expression)
-    }
+    operator fun div(expression : Expression) : Expression { return Quotient(this, expression) }
+    operator fun div(value : Double) : Expression { return Quotient(this, Constant(value)) }
 
     abstract fun evaluate(variables: VariableMap): Double
 

@@ -15,10 +15,10 @@ class VariableMap {
     }
 
     fun get(key: Variable): Double {
-        return this.map.get(key)!!
+        return this.map[key]!!
     }
 
-    fun plus(addend: VariableMap): VariableMap {
+    operator fun plus(addend: VariableMap): VariableMap {
         val newMap = VariableMap()
         for (key in this.map.keys) {
             newMap.put(key, get(key) + addend.get(key))
@@ -26,7 +26,7 @@ class VariableMap {
         return newMap
     }
 
-    fun times(scale: Double): VariableMap {
+    operator fun times(scale: Double): VariableMap {
         val newMap = VariableMap()
         for (key in this.map.keys) {
             newMap.put(key, get(key) * scale)

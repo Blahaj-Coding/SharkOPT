@@ -2,7 +2,6 @@ package autodiff
 
 class Variable(val name: String): Expression() {
     override var value = 0.0
-    var equalExpression: Expression = this
 
     override fun getVariables(): Set<Variable> {
         return setOf(this)
@@ -18,9 +17,6 @@ class Variable(val name: String): Expression() {
     }
 
     override fun forwardAutoDiff(variable: Variable, value: VariableMap, degree: Int): Vector {
-        if (equalExpression != this) {
-            return equalExpression.forwardAutoDiff(variable, value, degree)
-        }
         var vector = Vector()
         vector.add(value.get(this))
         if (variable == this) vector.add(1.0)
@@ -29,10 +25,6 @@ class Variable(val name: String): Expression() {
             vector.add(0.0)
         }
         return vector
-    }
-
-    fun setEqual(expression: Expression) {
-        equalExpression = expression
     }
 
     override fun toString(): String {

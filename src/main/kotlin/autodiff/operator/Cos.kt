@@ -8,7 +8,7 @@ import autodiff.Vector
 import kotlin.math.sin
 import kotlin.math.cos
 
-class Cos(private val expression: Expression) : Expression() {
+class Cos(val expression: Expression) : Expression() {
     private var containedVariables = expression.getVariables()
     override var value = 0.0
 

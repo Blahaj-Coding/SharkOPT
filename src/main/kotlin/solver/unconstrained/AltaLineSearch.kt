@@ -10,31 +10,39 @@ class AltaLineSearch(private val function: Expression) {
       */
     fun solveApproximateMinimum(initialGuess: VariableMap): VariableMap {
         var iteration = initialGuess
+        var alpha = Variable("alpha")
         // Arbitrary number of iterations - the terminating condition should depend on some sort of convergence estimate
         for (k in 1..200) {
-            var alpha = Variable("alpha")
             val gradient = function.solveGradient(iteration)
-            // println("gradient ${gradient.norm()}")
-            for (item in gradient.map) {
-                var variable = item.key
-                /**
-                 * Substitute the linear relationship for alpha into each variable x = x(alpha) + x'(alpha) * alpha)
-                 * I really hate modifying the variable class itself for this, a better solution would be nice
-                  */
-                variable.setEqual(Constant(iteration.get(variable)) + Constant(gradient.get(variable)) * alpha)
+            var alphaMap = HashMap<Variable, Expression>()
+            for (variable in gradient.map.keys) {
+                 // Substitute the linear relationship for alpha into each variable x = x(alpha) + x'(alpha) * alpha)
+                alphaMap[variable] = alpha * gradient.get(variable) + iteration.get(variable)
             }
+            val alphaFunction = replaceVariables(function, alphaMap)
             var varMap = VariableMap()
             varMap.put(alpha, 0.0) // alpha is initialized to 0
             // Fixed number of Newton iterations - a better method of estimating convergence should be used
-            for (k in 1..5) {
-                // Calculates the derivative of f with respect to alpha
-                var coef = function.solveDerivatives(alpha, varMap, 2)
+            for (k in 1..2) {
+                var coef = alphaFunction.solveDerivatives(alpha, varMap, 2) // derivatives of f with respect to alpha
                 var newAlpha = varMap.get(alpha) - coef.get(1) / coef.get(2)
-                // println(coef)
                 varMap.put(alpha, newAlpha)
             }
-            iteration = iteration.plus(gradient.times(varMap.get(alpha)))
+            iteration += gradient * varMap.get(alpha)
         }
         return iteration
+    }
+
+    private fun replaceVariables(exp: Expression, map: MutableMap<Variable, Expression>): Expression = when(exp) {
+        is Variable -> map[exp]!!
+        is Sum -> Sum(replaceVariables(exp.left, map), replaceVariables(exp.right, map))
+        is Difference -> Difference(replaceVariables(exp.left, map), replaceVariables(exp.right, map))
+        is Product -> Product(replaceVariables(exp.left, map), replaceVariables(exp.right, map))
+        is Quotient -> Quotient(replaceVariables(exp.numerator, map), replaceVariables(exp.denominator, map))
+        is Sin -> Sin(replaceVariables(exp.expression, map))
+        is Cos -> Cos(replaceVariables(exp.expression, map))
+        is Log -> Log(replaceVariables(exp.base, map), replaceVariables(exp.expression, map))
+        is Power -> Power(replaceVariables(exp.base, map), exp.exponent)
+        else -> exp
     }
 }
