@@ -28,13 +28,13 @@ fun main(args: Array<String>) {
     var varMap = VariableMap()
     for (k in 0..n) {
         xs.add(Variable("x$k"))
-        varMap.put(xs.get(k), 1.0)
+        varMap.put(xs[k], 1.0)
     }
     var cost: Expression = Constant(0.0)
     for (i in 0..n) {
-        cost = cost + xs.get(i) * xs.get(i) * i.toDouble() - xs.get(n)
+        cost += xs[i] * xs[i] * i.toDouble() - xs[n]
     }
-    cost = cost * 0.5
+    cost *= 0.5
 
     var solver = AltaLineSearch(cost)
     var time = measureNanoTime {
