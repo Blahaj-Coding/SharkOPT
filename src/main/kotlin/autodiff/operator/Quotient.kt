@@ -2,7 +2,6 @@ package autodiff.operator
 
 import autodiff.Expression
 import autodiff.Variable
-import autodiff.VariableMap
 import autodiff.Vector
 import kotlin.math.cos
 import kotlin.math.pow

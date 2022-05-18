@@ -1,7 +1,5 @@
 package autodiff
 
-import kotlin.math.cos
-
 class Constant(val num : Double) : Expression() {
     override var value = num
 

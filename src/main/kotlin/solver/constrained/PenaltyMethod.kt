@@ -24,7 +24,7 @@ class PenaltyMethod: NLPSolver() {
 //        }
     }
 
-    fun minimize(cost: Expression) {
+    override fun minimize(cost: Expression) {
         this.cost = cost
     }
 

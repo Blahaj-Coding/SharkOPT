@@ -18,7 +18,7 @@ class GradientDescent(): NLPSolver() {
             val direction = gradient * learningRate
             val alpha = lineSearch.solveApproximateMinimum(currentIteration, direction)
             currentIteration = currentIteration.plus(direction.times(alpha))
-            if (gradient.norm() < convergenceTolerance) return currentIteration
+            if (gradient.norm() < convergenceTolerance) return vectorToMap(currentIteration)
         }
     }
 }
