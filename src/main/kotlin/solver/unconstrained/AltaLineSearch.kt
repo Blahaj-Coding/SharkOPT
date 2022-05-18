@@ -14,10 +14,10 @@ class AltaLineSearch(private val function: Expression) {
         // Arbitrary number of iterations - the terminating condition should depend on some sort of convergence estimate
         for (k in 1..200) {
             val gradient = function.solveGradient(iteration)
-            var alphaMap = HashMap<Variable, Expression>()
-            for (variable in gradient.map.keys) {
+            var alphaMap = mutableMapOf<Variable, Expression>()
+            for ((variable, gradientValue) in gradient.map) {
                  // Substitute the linear relationship for alpha into each variable x = x(alpha) + x'(alpha) * alpha)
-                alphaMap[variable] = alpha * gradient.get(variable) + iteration.get(variable)
+                alphaMap[variable] = alpha * gradientValue + iteration.get(variable)
             }
             val alphaFunction = replaceVariables(function, alphaMap)
             var varMap = VariableMap()
