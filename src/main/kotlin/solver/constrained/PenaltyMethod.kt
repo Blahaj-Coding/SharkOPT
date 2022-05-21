@@ -1,45 +1,35 @@
 package autodiff.solver.constrained
 
 import autodiff.*
+import autodiff.autodiff.Equation
+import autodiff.operator.*
 import autodiff.operator.Power
 import autodiff.solver.unconstrained.GradientDescent
-import autodiff.solver.unconstrained.NLPSolver
+import org.ejml.simple.SimpleMatrix
 
-class PenaltyMethod: NLPSolver() {
-    var constraints = ArrayList<Expression>()
-
-    override fun solve(): MutableMap<Variable, Double> {
-        TODO("Not yet implemented")
+class PenaltyMethod: ConstrainedSolver() {
+    override fun solve(initialGuess: SimpleMatrix): SimpleMatrix {
+        val solver = GradientDescent()
+        var currentIteration = initialGuess
+        var penaltyScalar = 100.0
+        var penaltyTerms: Expression = Constant(0.0)
+        for (constraint in constraints) {
+            penaltyTerms += penaltyFunction(constraint)
+        }
+        // Arbitrary number of iterations... replace with something better later
+        for (k in 1..10) {
+            solver.minimize(cost + penaltyTerms * penaltyScalar)
+            currentIteration = solver.solve(currentIteration)
+            penaltyScalar *= 10
+        }
+        return currentIteration
     }
 
-    fun addEqualityConstraint(LHS: Expression, RHS: Expression) {
-        constraints.add(Power(LHS - RHS, Constant(2.0)))
-    }
-
-    fun addInequalityConstraint(LHS: Expression, inequalityType: Inequality, RHS: Expression) {
-        TODO("finish when Min and Max Operators are completed")
-//        when (inequalityType) {
-//            Inequality.GreaterThan -> Power()
-//            Inequality.LessThan -> Power()
-//        }
-    }
-
-    override fun minimize(cost: Expression) {
-        this.cost = cost
-    }
-
-    fun solve(penalty: Double): MutableMap<Variable, Double> {
-//        var constraintCost: Expression = Constant(0.0)
-//        for (constraint in constraints) {
-//            constraintCost = constraintCost + constraint
-//        }
-//        val solver = GradientDescent(cost + Constant(penalty) * constraintCost)
-//        return solver.solveMinimum(initialGuess)
-        TODO("Not yet implemented")
-    }
-
-
-    enum class Inequality {
-        GreaterThan, LessThan
+    private fun penaltyFunction(equation: Equation): Expression {
+        return when (equation.operator) {
+            Equation.Operator.EQUAL_TO_ZERO -> Power(equation.expression, 2)
+            Equation.Operator.LESS_THAN_OR_EQUAL_TO_ZERO -> Power(Max(0, equation.expression), 2)
+            Equation.Operator.LESS_THAN_ZERO -> Power(Max(0, equation.expression), 2)
+        }
     }
 }

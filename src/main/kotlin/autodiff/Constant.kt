@@ -1,23 +1,26 @@
 package autodiff
 
+import org.ejml.simple.SimpleMatrix
+
 class Constant(val num : Double) : Expression() {
+    constructor(num: Int) : this(num.toDouble())
     override var value = num
 
     override fun getVariables(): MutableSet<Variable> {
-        return mutableSetOf();
+        return mutableSetOf()
     }
 
-    override fun evaluate(variables: Vector): Double {
+    override fun evaluate(variables: SimpleMatrix): Double {
         return value
     }
 
-    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {}
+    override fun solveGradient(variables: SimpleMatrix, gradient: SimpleMatrix, path: Double) {}
 
-    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
-        var vector = Vector()
-        vector.add(this.value)
+    override fun forwardAutoDiff(variable: Variable, value: SimpleMatrix, degree: Int): SimpleMatrix {
+        var vector = SimpleMatrix(degree + 1, 1)
+        vector[0] = this.value
         for (k in 1..degree) {
-            vector.add(0.0)
+            vector[k] = 0.0
         }
         return vector
     }

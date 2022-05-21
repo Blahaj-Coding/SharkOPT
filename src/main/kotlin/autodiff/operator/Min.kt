@@ -1,8 +1,9 @@
 package autodiff.operator
 
 import autodiff.*
+import org.ejml.simple.SimpleMatrix
 
-class Min(private val a: Expression, private val b: Expression) : Expression() {
+class Min(val a: Expression, val b: Expression) : Expression() {
     private val containedVariables = a.getVariables() + b.getVariables()
 
     override var value = 0.0
@@ -11,7 +12,7 @@ class Min(private val a: Expression, private val b: Expression) : Expression() {
         return containedVariables
     }
 
-    override fun solveGradient(variables: Vector, gradient: Vector, path: Double) {
+    override fun solveGradient(variables: SimpleMatrix, gradient: SimpleMatrix, path: Double) {
         val a0 = a.evaluate(variables)
         val b0 = b.evaluate(variables)
 
@@ -19,7 +20,7 @@ class Min(private val a: Expression, private val b: Expression) : Expression() {
         else         b.solveGradient(variables, gradient, path)
     }
 
-    override fun forwardAutoDiff(variable: Variable, value: Vector, degree: Int): Vector {
+    override fun forwardAutoDiff(variable: Variable, value: SimpleMatrix, degree: Int): SimpleMatrix {
         val a0 = a.evaluate(value)
         val b0 = b.evaluate(value)
 
@@ -27,11 +28,20 @@ class Min(private val a: Expression, private val b: Expression) : Expression() {
         else b.forwardAutoDiff(variable, value, degree)
     }
 
-    override fun evaluate(variables: Vector): Double {
+    override fun evaluate(variables: SimpleMatrix): Double {
         return kotlin.math.min(a.evaluate(variables), b.evaluate(variables))
     }
 
     override fun toString(): String {
         return "min($a, $b)"
     }
+
+    constructor(a: Expression, b: Double) : this(a, Constant(b))
+    constructor(a: Double, b: Expression) : this(Constant(a), b)
+    constructor(a: Double, b: Double) : this(Constant(a), Constant(b))
+    constructor(a: Expression, b: Int) : this(a, Constant(b))
+    constructor(a: Int, b: Expression) : this(Constant(a), b)
+    constructor(a: Int, b: Int) : this(Constant(a), Constant(b))
+    constructor(a: Double, b: Int) : this(Constant(a), Constant(b))
+    constructor(a: Int, b: Double) : this(Constant(a), Constant(b))
 }
