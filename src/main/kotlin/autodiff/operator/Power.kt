@@ -32,6 +32,10 @@ class Power(val base: Expression, val exponent: Constant): Expression() {
         var g = base.forwardAutoDiff(variable, value, degree)
         var a = exponent.value
         var coef = SimpleMatrix(degree + 1,1)
+        if (g[0] == 0.0) {
+            for (k in 0..degree) coef[k] = 0.0
+            return coef
+        }
         coef[0] = g[0].pow(a)
         for (k in 1..degree) {
             var ck = 0.0
@@ -40,6 +44,7 @@ class Power(val base: Expression, val exponent: Constant): Expression() {
             }
             coef[k] = ck / g[0]
         }
+//        println(g[0])
         return coef
     }
 

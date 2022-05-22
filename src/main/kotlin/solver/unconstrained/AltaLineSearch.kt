@@ -25,10 +25,13 @@ class AltaLineSearch(): UnconstrainedSolver() {
         }
         val alphaFunction = replaceVariables(cost, alphaMap)
         // Fixed number of Newton iterations - a better method of estimating convergence should be used
-        for (k in 1..2) {
+        for (k in 1..5) {
             var coef = alphaFunction.solveDerivatives(alpha, currentIteration, 2) // derivatives of f with respect to alpha
 //            println(coef)
-            currentIteration[0] -= coef[1] / coef[2]
+            var delta = Math.abs(coef[1] / coef[2])
+            println(delta)
+            currentIteration[0] -= delta
+//            println(currentIteration[0])
         }
         return initial + gradient.scale(currentIteration[0])
     }

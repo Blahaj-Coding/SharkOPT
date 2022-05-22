@@ -11,25 +11,21 @@ class PenaltyMethod: ConstrainedSolver() {
     override fun solve(initialGuess: SimpleMatrix): SimpleMatrix {
         val solver = GradientDescent()
         var currentIteration = initialGuess
-        var penaltyScalar = 100.0
+        var mu = 10.0
         var penaltyTerms: Expression = Constant(0.0)
-        for (constraint in constraints) {
-            penaltyTerms += penaltyFunction(constraint)
+        for (constraint in equalityConstraints) {
+            penaltyTerms += Power(constraint, 2)
         }
+        println((penaltyTerms).solveGradient(currentIteration))
+        println(penaltyTerms)
         // Arbitrary number of iterations... replace with something better later
-        for (k in 1..10) {
-            solver.minimize(cost + penaltyTerms * penaltyScalar)
+        for (k in 1..20) {
+            solver.minimize(cost + penaltyTerms * mu)
             currentIteration = solver.solve(currentIteration)
-            penaltyScalar *= 10
+            mu *= 10
+//            println(currentIteration)
         }
+        println((penaltyTerms).solveGradient(currentIteration))
         return currentIteration
-    }
-
-    private fun penaltyFunction(equation: Equation): Expression {
-        return when (equation.operator) {
-            Equation.Operator.EQUAL_TO_ZERO -> Power(equation.expression, 2)
-            Equation.Operator.LESS_THAN_OR_EQUAL_TO_ZERO -> Power(Max(0, equation.expression), 2)
-            Equation.Operator.LESS_THAN_ZERO -> Power(Max(0, equation.expression), 2)
-        }
     }
 }

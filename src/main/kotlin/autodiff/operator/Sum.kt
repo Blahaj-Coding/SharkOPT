@@ -26,6 +26,7 @@ class Sum(val left: Expression, val right: Expression) : Expression() {
     override fun forwardAutoDiff(variable: Variable, value: SimpleMatrix, degree: Int): SimpleMatrix {
         val p1 = left.forwardAutoDiff(variable, value, degree)
         val p2 = right.forwardAutoDiff(variable, value, degree)
+//        println(p1 + p2)
         return p1 + p2
     }
 
