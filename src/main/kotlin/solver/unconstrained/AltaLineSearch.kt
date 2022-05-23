@@ -3,6 +3,7 @@ package autodiff.solver.unconstrained
 import autodiff.*
 import autodiff.operator.*
 import org.ejml.simple.SimpleMatrix
+import kotlin.math.abs
 
 class AltaLineSearch(): UnconstrainedSolver() {
     private var alpha = Variable()
@@ -16,7 +17,7 @@ class AltaLineSearch(): UnconstrainedSolver() {
         // Initializing alpha
         alpha.index = 0
         var currentIteration = SimpleMatrix(1,1)
-        currentIteration[0] = 0.0 // Alpha is intialized to zero
+        currentIteration[0] = 0.0 // Alpha is initialized to zero
         // Replace variables with function of alpha
         val alphaMap = mutableMapOf<Variable, Expression>()
         for (variable in cost.getVariables()) {
@@ -25,11 +26,11 @@ class AltaLineSearch(): UnconstrainedSolver() {
         }
         val alphaFunction = replaceVariables(cost, alphaMap)
         // Fixed number of Newton iterations - a better method of estimating convergence should be used
-        for (k in 1..5) {
+        for (k in 1..100) {
             var coef = alphaFunction.solveDerivatives(alpha, currentIteration, 2) // derivatives of f with respect to alpha
 //            println(coef)
-            var delta = Math.abs(coef[1] / coef[2])
-            println(delta)
+            var delta = abs(coef[1] / coef[2])
+//            println(delta)
             currentIteration[0] -= delta
 //            println(currentIteration[0])
         }

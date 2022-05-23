@@ -4,7 +4,7 @@ import autodiff.*
 import org.ejml.simple.SimpleMatrix
 
 class GradientDescent: UnconstrainedSolver() {
-    private val lineSearch = BacktrackingLineSearch()
+    private val lineSearch = AltaLineSearch()
     private val learningRate = -0.1
     private val convergenceTolerance = 1E-4
 

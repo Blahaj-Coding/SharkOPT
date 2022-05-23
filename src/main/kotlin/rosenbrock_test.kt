@@ -3,6 +3,7 @@ package autodiff
 import autodiff.solver.constrained.*
 import autodiff.operator.*
 import autodiff.Variable
+import autodiff.solver.unconstrained.BFGS
 import autodiff.solver.unconstrained.GradientDescent
 
 fun main(args: Array<String>) {
@@ -14,11 +15,11 @@ fun main(args: Array<String>) {
 //    val solution = solver.solve()
 //    println(x.index)
 //    println(solution)
-    val solver = GradientDescent()
+    val solver = BFGS()
     val x = Variable()
     val y = Variable()
     x.setInitial(1.0)
-    y.setInitial(0.0)
+    y.setInitial(1.0)
     solver.minimize(Power(x*x+y*y-5, 2) + Power(x*x , 4))
     println("x index: ${x.index}")
     println(solver.solve())
